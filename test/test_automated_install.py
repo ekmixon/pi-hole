@@ -22,7 +22,7 @@ def test_supported_operating_system(Pihole):
     source /opt/pihole/basic-install.sh
     package_manager_detect
     ''')
-    expected_stdout = cross_box + ' OS distribution not supported'
+    expected_stdout = f'{cross_box} OS distribution not supported'
     assert expected_stdout in package_manager_detect.stdout
     # assert package_manager_detect.rc == 1
 
@@ -35,7 +35,7 @@ def test_setupVars_are_sourced_to_global_scope(Pihole):
     '''
     setup_var_file = 'cat <<EOF> /etc/pihole/setupVars.conf\n'
     for k, v in SETUPVARS.items():
-        setup_var_file += "{}={}\n".format(k, v)
+        setup_var_file += f"{k}={v}\n"
     setup_var_file += "EOF\n"
     Pihole.run(setup_var_file)
 
@@ -58,7 +58,7 @@ def test_setupVars_are_sourced_to_global_scope(Pihole):
     output = run_script(Pihole, script).stdout
 
     for k, v in SETUPVARS.items():
-        assert "{}={}".format(k, v) in output
+        assert f"{k}={v}" in output
 
 
 def test_setupVars_saved_to_file(Pihole):
@@ -68,7 +68,7 @@ def test_setupVars_saved_to_file(Pihole):
     # dedent works better with this and padding matching script below
     set_setup_vars = '\n'
     for k, v in SETUPVARS.items():
-        set_setup_vars += "    {}={}\n".format(k, v)
+        set_setup_vars += f"    {k}={v}\n"
     Pihole.run(set_setup_vars).stdout
 
     script = dedent('''\
@@ -87,7 +87,7 @@ def test_setupVars_saved_to_file(Pihole):
     output = run_script(Pihole, script).stdout
 
     for k, v in SETUPVARS.items():
-        assert "{}={}".format(k, v) in output
+        assert f"{k}={v}" in output
 
 
 def test_selinux_not_detected(Pihole):
@@ -99,7 +99,7 @@ def test_selinux_not_detected(Pihole):
     source /opt/pihole/basic-install.sh
     checkSelinux
     ''')
-    expected_stdout = info_box + ' SELinux not detected'
+    expected_stdout = f'{info_box} SELinux not detected'
     assert expected_stdout in check_selinux.stdout
     assert check_selinux.rc == 0
 
@@ -112,17 +112,17 @@ def test_installPiholeWeb_fresh_install_no_errors(Pihole):
     source /opt/pihole/basic-install.sh
     installPiholeWeb
     ''')
-    expected_stdout = info_box + ' Installing blocking page...'
+    expected_stdout = f'{info_box} Installing blocking page...'
     assert expected_stdout in installWeb.stdout
     expected_stdout = tick_box + (' Creating directory for blocking page, '
                                   'and copying files')
     assert expected_stdout in installWeb.stdout
-    expected_stdout = info_box + ' Backing up index.lighttpd.html'
+    expected_stdout = f'{info_box} Backing up index.lighttpd.html'
     assert expected_stdout in installWeb.stdout
     expected_stdout = ('No default index.lighttpd.html file found... '
                        'not backing up')
     assert expected_stdout in installWeb.stdout
-    expected_stdout = tick_box + ' Installing sudoer file'
+    expected_stdout = f'{tick_box} Installing sudoer file'
     assert expected_stdout in installWeb.stdout
     web_directory = Pihole.run('ls -r /var/www/html/pihole').stdout
     assert 'index.php' in web_directory
@@ -138,7 +138,7 @@ def test_update_package_cache_success_no_errors(Pihole):
     package_manager_detect
     update_package_cache
     ''')
-    expected_stdout = tick_box + ' Update local cache of available packages'
+    expected_stdout = f'{tick_box} Update local cache of available packages'
     assert expected_stdout in updateCache.stdout
     assert 'error' not in updateCache.stdout.lower()
 
@@ -153,7 +153,7 @@ def test_update_package_cache_failure_no_errors(Pihole):
     package_manager_detect
     update_package_cache
     ''')
-    expected_stdout = cross_box + ' Update local cache of available packages'
+    expected_stdout = f'{cross_box} Update local cache of available packages'
     assert expected_stdout in updateCache.stdout
     assert 'Error: Unable to update package cache.' in updateCache.stdout
 
@@ -183,11 +183,11 @@ def test_FTL_detect_aarch64_no_errors(Pihole):
     theRest="${funcOutput%pihole-FTL*}"
     FTLdetect "${binary}" "${theRest}"
     ''')
-    expected_stdout = info_box + ' FTL Checks...'
+    expected_stdout = f'{info_box} FTL Checks...'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Detected AArch64 (64 Bit ARM) processor'
+    expected_stdout = f'{tick_box} Detected AArch64 (64 Bit ARM) processor'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in detectPlatform.stdout
 
 
@@ -207,11 +207,11 @@ def test_FTL_detect_armv4t_no_errors(Pihole):
     theRest="${funcOutput%pihole-FTL*}"
     FTLdetect "${binary}" "${theRest}"
     ''')
-    expected_stdout = info_box + ' FTL Checks...'
+    expected_stdout = f'{info_box} FTL Checks...'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + (' Detected ARMv4 processor')
+    expected_stdout = f'{tick_box} Detected ARMv4 processor'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in detectPlatform.stdout
 
 
@@ -231,11 +231,11 @@ def test_FTL_detect_armv5te_no_errors(Pihole):
     theRest="${funcOutput%pihole-FTL*}"
     FTLdetect "${binary}" "${theRest}"
     ''')
-    expected_stdout = info_box + ' FTL Checks...'
+    expected_stdout = f'{info_box} FTL Checks...'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + (' Detected ARMv5 (or newer) processor')
+    expected_stdout = f'{tick_box} Detected ARMv5 (or newer) processor'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in detectPlatform.stdout
 
 
@@ -255,12 +255,12 @@ def test_FTL_detect_armv6l_no_errors(Pihole):
     theRest="${funcOutput%pihole-FTL*}"
     FTLdetect "${binary}" "${theRest}"
     ''')
-    expected_stdout = info_box + ' FTL Checks...'
+    expected_stdout = f'{info_box} FTL Checks...'
     assert expected_stdout in detectPlatform.stdout
     expected_stdout = tick_box + (' Detected ARMv6 processor '
                                   '(with hard-float support)')
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in detectPlatform.stdout
 
 
@@ -280,12 +280,12 @@ def test_FTL_detect_armv7l_no_errors(Pihole):
     theRest="${funcOutput%pihole-FTL*}"
     FTLdetect "${binary}" "${theRest}"
     ''')
-    expected_stdout = info_box + ' FTL Checks...'
+    expected_stdout = f'{info_box} FTL Checks...'
     assert expected_stdout in detectPlatform.stdout
     expected_stdout = tick_box + (' Detected ARMv7 processor '
                                   '(with hard-float support)')
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in detectPlatform.stdout
 
 
@@ -305,11 +305,11 @@ def test_FTL_detect_armv8a_no_errors(Pihole):
     theRest="${funcOutput%pihole-FTL*}"
     FTLdetect "${binary}" "${theRest}"
     ''')
-    expected_stdout = info_box + ' FTL Checks...'
+    expected_stdout = f'{info_box} FTL Checks...'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Detected ARMv8 (or newer) processor'
+    expected_stdout = f'{tick_box} Detected ARMv8 (or newer) processor'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in detectPlatform.stdout
 
 
@@ -325,11 +325,11 @@ def test_FTL_detect_x86_64_no_errors(Pihole):
     theRest="${funcOutput%pihole-FTL*}"
     FTLdetect "${binary}" "${theRest}"
     ''')
-    expected_stdout = info_box + ' FTL Checks...'
+    expected_stdout = f'{info_box} FTL Checks...'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Detected x86_64 processor'
+    expected_stdout = f'{tick_box} Detected x86_64 processor'
     assert expected_stdout in detectPlatform.stdout
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in detectPlatform.stdout
 
 
@@ -365,7 +365,7 @@ def test_FTL_download_aarch64_no_errors(Pihole):
     create_pihole_user
     FTLinstall "pihole-FTL-aarch64-linux-gnu"
     ''')
-    expected_stdout = tick_box + ' Downloading and Installing FTL'
+    expected_stdout = f'{tick_box} Downloading and Installing FTL'
     assert expected_stdout in download_binary.stdout
     assert 'error' not in download_binary.stdout.lower()
 

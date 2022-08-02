@@ -18,7 +18,7 @@ def test_release_supported_version_check_centos(Pihole):
     package_manager_detect
     select_rpm_php
     ''')
-    expected_stdout = cross_box + (' CentOS 6 is not supported.')
+    expected_stdout = f'{cross_box} CentOS 6 is not supported.'
     assert expected_stdout in package_manager_detect.stdout
     expected_stdout = 'Please update to CentOS release 7 or later'
     assert expected_stdout in package_manager_detect.stdout
@@ -36,7 +36,7 @@ def test_enable_epel_repository_centos(Pihole):
     expected_stdout = info_box + (' Enabling EPEL package repository '
                                   '(https://fedoraproject.org/wiki/EPEL)')
     assert expected_stdout in package_manager_detect.stdout
-    expected_stdout = tick_box + ' Installed epel-release'
+    expected_stdout = f'{tick_box} Installed epel-release'
     assert expected_stdout in package_manager_detect.stdout
     epel_package = Pihole.package('epel-release')
     assert epel_package.is_installed

@@ -52,9 +52,10 @@ def Docker(request, args, image, cmd):
 
     def teardown():
         check_output("docker rm -f %s", docker_id)
+
     request.addfinalizer(teardown)
 
-    docker_container = testinfra.get_backend("docker://" + docker_id)
+    docker_container = testinfra.get_backend(f"docker://{docker_id}")
     docker_container.id = docker_id
     return docker_container
 
@@ -82,7 +83,7 @@ def image(request, tag):
     '''
     built by test_000_build_containers.py
     '''
-    return 'pytest_pihole:{}'.format(tag)
+    return f'pytest_pihole:{tag}'
 
 
 @pytest.fixture()
@@ -99,7 +100,7 @@ def mock_command(script, args, container):
     Allows for setup of commands we don't really want to have to run for real
     in unit tests
     '''
-    full_script_path = '/usr/local/bin/{}'.format(script)
+    full_script_path = f'/usr/local/bin/{script}'
     mock_script = dedent('''\
     #!/bin/bash -e
     echo "\$0 \$@" >> /var/log/{script}
@@ -126,7 +127,7 @@ def mock_command_2(script, args, container):
     Allows for setup of commands we don't really want to have to run for real
     in unit tests
     '''
-    full_script_path = '/usr/local/bin/{}'.format(script)
+    full_script_path = f'/usr/local/bin/{script}'
     mock_script = dedent('''\
     #!/bin/bash -e
     echo "\$0 \$@" >> /var/log/{script}
